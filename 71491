@@ -1,0 +1,40 @@
+# Fotografía / Photography
+
+Imágenes tomadas del dosier "Ownexis-Dossier-4-Sectores-REV.pptx" y optimizadas para web.
+
+| Archivo | Dónde aparece | Origen (diapositiva) |
+|---|---|---|
+| `hero-proposition.jpg` | Sección "La propuesta" | 2 |
+| `sector-hospitality.jpg` | Sector 01 · Hotelero | 4 |
+| `sector-fb.jpg` | Sector 02 · Restauración | 5 |
+| `sector-commercial.jpg` | Sector 03 · Terciario | 7 |
+| `sector-residential.jpg` | Sector 04 · Residencial | 8 |
+| `governance.jpg` | Gobernanza e independencia | 12 |
+| `founder.jpg` | La experiencia detrás de Ownexis | 13 |
+
+## Sustituir una foto
+
+Basta con guardar el nuevo archivo **con el mismo nombre** en esta carpeta. No hay que
+tocar el HTML.
+
+Cuatro de las imágenes venían del PowerPoint a baja resolución y conviene reemplazarlas
+por originales cuando estén disponibles:
+
+- `hero-proposition.jpg` — 424 × 282 px
+- `sector-hospitality.jpg` — 447 × 447 px
+- `governance.jpg` — 640 × 480 px
+- `sector-commercial.jpg` — 1000 × 667 px
+
+Recomendado: JPG, sRGB, 1600 px en el lado largo, por debajo de 400 KB.
+
+## Añadir una foto nueva en otro marco
+
+```html
+<div class="imgframe ar-hero">
+  <img src="assets/img/photos/nombre.jpg" alt="Descripción">
+  <div class="cap"><div class="d">Pie de foto</div></div>
+</div>
+```
+
+Desde `/es/index.html` la ruta es `../assets/img/photos/...`.
+Proporciones disponibles: `ar-hero` (4:3), `ar-wide` (16:9), `ar-tall` (3:4), `ar-sq` (1:1).
