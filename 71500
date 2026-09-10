@@ -1,0 +1,117 @@
+/* ============================================================
+   Ownexis — site behaviour
+   ------------------------------------------------------------
+   CONTACT FORM
+   GitHub Pages serves static files only, so the form cannot send
+   mail by itself. When the visitor presses "Send", their own
+   email client opens with the message pre-filled, addressed to
+   FORM_RECIPIENT below — then the thank-you window appears.
+   ============================================================ */
+var FORM_RECIPIENT = "info@ownexis.com";
+
+(function () {
+  "use strict";
+
+  var isES = (document.documentElement.lang || "en").toLowerCase().indexOf("es") === 0;
+
+  /* ---------- scroll reveal ---------- */
+  if (window.IntersectionObserver) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll("section > .wrap > *").forEach(function (el, i) {
+      el.classList.add("reveal");
+      el.style.transitionDelay = (i % 3) * 60 + "ms";
+      io.observe(el);
+    });
+  }
+
+  /* ---------- mobile navigation ---------- */
+  var toggle = document.querySelector(".nav-toggle");
+  var links = document.getElementById("nav-links");
+  if (toggle && links) {
+    toggle.addEventListener("click", function () {
+      var open = links.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    links.addEventListener("click", function (e) {
+      if (e.target.tagName === "A") {
+        links.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  /* ---------- current year ---------- */
+  var yr = document.getElementById("yr");
+  if (yr) { yr.textContent = new Date().getFullYear(); }
+
+  /* ---------- thank-you modal ---------- */
+  var modal = document.getElementById("thanks");
+  var lastFocus = null;
+
+  function openModal() {
+    if (!modal) return;
+    lastFocus = document.activeElement;
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    var btn = document.getElementById("thanks-close");
+    if (btn) btn.focus();
+  }
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+  if (modal) {
+    var closeBtn = document.getElementById("thanks-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
+  }
+
+  /* ---------- contact form ---------- */
+  var form = document.getElementById("contact-form");
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    /* honeypot: silently accept and do nothing else */
+    if (form.elements["company_website"] && form.elements["company_website"].value) {
+      openModal();
+      return;
+    }
+
+    var required = ["name", "email", "note"];
+    for (var i = 0; i < required.length; i++) {
+      var f = form.elements[required[i]];
+      if (!f.value.trim() || !f.checkValidity()) {
+        f.focus();
+        f.reportValidity && f.reportValidity();
+        return;
+      }
+    }
+
+    var name = form.elements["name"].value.trim();
+    var phone = form.elements["phone"] ? form.elements["phone"].value.trim() : "";
+    var email = form.elements["email"].value.trim();
+    var note = form.elements["note"].value.trim();
+
+    var subject = isES ? "Consulta desde ownexis.com" : "Enquiry from ownexis.com";
+    var body = isES
+      ? "Nombre: " + name + "\nTeléfono: " + phone + "\nEmail: " + email + "\n\nNota:\n" + note
+      : "Name: " + name + "\nPhone: " + phone + "\nEmail: " + email + "\n\nNote:\n" + note;
+
+    window.location.href = "mailto:" + FORM_RECIPIENT +
+      "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+
+    form.reset();
+    openModal();
+  });
+})();
