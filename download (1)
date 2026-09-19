@@ -1,0 +1,13 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
+
+# Working files that should not ship with the site
+*.pptx
+*.docx
+*.xlsx
+~$*
